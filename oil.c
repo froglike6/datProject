@@ -7,12 +7,11 @@ void setup();
 void dataShow();
 void dataAnis();
 
+int year[60];
+double gasoline[60], diesel[60], kerosene[60];
+int car[60];
 
 int main(){
-	setup();
-	int year[60];
-	double gasoline[60], diesel[60], kerosene[60];
-	int car[60];
 	int temp=0, i;
 	
 	FILE *data = NULL;
@@ -29,7 +28,7 @@ int main(){
 		return -1;
 	}
 	fclose(data);
-	
+	setup();
 	/*
 	//Print data of file
 	for (i=0; i<51; i++){
@@ -54,10 +53,24 @@ void setup(){
 	printf("[3] 나가기\n\n\n\n\n");
 	
 	int cur=1;
-	int brk=0;
 	while(1){
 		int key = _getch();
-		if (key == 224) {
+		if (key == 13){
+			switch (cur){
+				case 1:
+					dataShow();
+					break;
+				case 2:
+					dataAnis();
+					return;
+					break;
+				case 3:
+					printf("Bye!");
+					exit(0);
+					break;
+			}
+		}
+		else if (key == 224) {
 			key = _getch();
 			switch (key){
 				case 72:
@@ -68,20 +81,7 @@ void setup(){
 					break;
 				}
 		}
-		else if (key == 13){
-			switch (cur){
-				case 1:
-					dataShow();
-					break;
-				case 2:
-					dataAnis();
-					break;
-				case 3:
-					printf("Bye!");
-					exit(0);
-					break;
-			}
-		}
+		menu(cur);
 	}
 }
 
@@ -129,10 +129,127 @@ void dataShow(){
 	
 }
 
-void dataAnis(){//please make case and menu
-    int N=51; //Number of data points
+void dataAnis(){
+	system("cls");
+	for (int i=0; i<100; i++) printf("=");
+	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	printf("[1]");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	printf(" 가솔린 데이터\n");
+	printf("[2] 디젤 데이터\n");
+	printf("[3] 케로신 데이터\n");
+	printf("[4] 자동차 데이터\n");
+	printf("[5] 뒤로 가기\n\n\n\n\n");
+	int cur=1;
+	int N=51; //Number of data points
     int n; //degree of polynomial
-    double y[N]; //array of x and y data points
+	double y[N]; //array of x and y data points
+	while(1){
+		int key = _getch();
+		if (key == 224) {
+			key = _getch();
+			switch (key){
+				case 72:
+					if (cur>1 && cur<=6) cur--; 
+					break;
+				case 80:
+					if (cur>=0 && cur<5) cur++; 
+					break;
+				}
+		}
+		else if (key == 13){
+			switch (cur){
+				case 1:
+					for (int i=0; i<51; i++) y[i]=gasoline[i];
+					break;
+				case 2:
+					for (int i=0; i<51; i++) y[i]=diesel[i];
+					break;
+				case 3:
+					for (int i=0; i<51; i++) y[i]=kerosene[i];
+					break;
+				case 4:
+					for (int i=0; i<51; i++) y[i]=car[i];
+					break;
+				case 5:
+					setup();
+					return;
+					break;
+			}
+		}
+		switch (cur){
+		case 1:
+			system("cls");
+			for (int i=0; i<100; i++) printf("=");
+			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			printf("[1]");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			printf(" 가솔린 데이터\n");
+			printf("[2] 디젤 데이터\n");
+			printf("[3] 케로신 데이터\n");
+			printf("[4] 자동차 데이터\n");
+			printf("[5] 뒤로 가기\n\n\n\n\n");
+			break;
+		case 2:
+			system("cls");
+			for (int i=0; i<100; i++) printf("=");
+			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			printf("[1] 가솔린 데이터\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			printf("[2]");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			printf(" 디젤 데이터\n");
+			printf("[3] 케로신 데이터\n");
+			printf("[4] 자동차 데이터\n");
+			printf("[5] 뒤로 가기\n\n\n\n\n");
+			break;
+		case 3:
+			system("cls");
+			for (int i=0; i<100; i++) printf("=");
+			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			printf("[1] 가솔린 데이터\n");
+			printf("[2] 디젤 데이터\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			printf("[3]");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			printf(" 케로신 데이터\n");
+			printf("[4] 자동차 데이터\n");
+			printf("[5] 뒤로 가기\n\n\n\n\n");
+			break;
+		case 4:
+			system("cls");
+			for (int i=0; i<100; i++) printf("=");
+			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			printf("[1] 가솔린 데이터\n");
+			printf("[2] 디젤 데이터\n");
+			printf("[3] 케로신 데이터\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			printf("[4]");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			printf(" 자동차 데이터\n");
+			printf("[5] 뒤로 가기\n\n\n\n\n");
+			break;
+		case 5:
+			system("cls");
+			for (int i=0; i<100; i++) printf("=");
+			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			printf("[1] 가솔린 데이터\n");
+			printf("[2] 디젤 데이터\n");
+			printf("[3] 케로신 데이터\n");
+			printf("[4] 자동차 데이터\n");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+			printf("[5]");
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+			printf(" 뒤로 가기\n\n\n\n\n");
+			break;
+		
+		
+		}
+	}
+	
+    
     int i,j;
     double X[2*n+1];  
     for(i=0;i<=2*n;i++){
@@ -146,7 +263,7 @@ void dataAnis(){//please make case and menu
     for(i=0;i<=n;i++){
         Y[i]=0;
         for(j=0;j<N;j++){
-            Y[i]=Y[i]+pow(year[j],i)*y[j];
+            Y[i]=Y[i]+pow(year[j],i)*year[j];
         }
     }
     for(i=0;i<=n;i++){
@@ -162,9 +279,11 @@ void dataAnis(){//please make case and menu
     for(i=0;i<=n;i++){
         printf("%lfx^%d+",A[i],i);
     }
-     
 }
 
+void dataAnisMenu(){//please make menu
+	
+}
 
 void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
     int i,j,k;
