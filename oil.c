@@ -7,7 +7,7 @@ void setup();
 void dataShow();
 void dataAnis();
 void dataAnisMenu(int cur);
-void dataAnisMain(int n, int N, double y[N]);
+void dataAnisMain(int N, double y[N]);
 
 int year[60];
 double gasoline[60], diesel[60], kerosene[60];
@@ -145,7 +145,6 @@ void dataAnis(){
 	printf("[5] 뒤로 가기\n\n\n\n\n");
 	int cur=1;
 	int N=51; //Number of data points
-    int n=3; //degree of polynomial
 	double y[N]; //array of x and y data points
 	while(1){
 		int key = _getch();
@@ -164,22 +163,22 @@ void dataAnis(){
 			switch (cur){
 				case 1:
 					for (int i=0; i<51; i++) y[i]=gasoline[i];
-					dataAnisMain(n, N, y);
+					dataAnisMain(N, y);
 					return;
 					break;
 				case 2:
 					for (int i=0; i<51; i++) y[i]=diesel[i];
-					dataAnisMain(n, N, y);
+					dataAnisMain(N, y);
 					return;
 					break;
 				case 3:
 					for (int i=0; i<51; i++) y[i]=kerosene[i];
-					dataAnisMain(n, N, y);
+					dataAnisMain(N, y);
 					return;
 					break;
 				case 4:
 					for (int i=0; i<51; i++) y[i]=car[i];
-					dataAnisMain(n, N, y);
+					dataAnisMain(N, y);
 					return;
 					break;
 				case 5:
@@ -192,12 +191,18 @@ void dataAnis(){
 	}
 }
 
-void dataAnisMain(int n, int N, double y[N]){
+void dataAnisMain(int N, double y[N]){
+	int n=0;
 	system("cls");
 	for (int i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
-	printf("회귀할 데이터의 차수를 입력(0<n<10): ");
-	//please make exception
+	printf("회귀할 데이터의 차수를 입력(0<n<11): ");
+	scanf("%d", &n);
+	while (n<1 || n>10){
+		printf("\n다시 입력: ");
+		fflush(stdin);
+		scanf("%d", &n);
+	}
     int i,j;
     double X[2*n+1];  
     for(i=0;i<=2*n;i++){
@@ -225,8 +230,8 @@ void dataAnisMain(int n, int N, double y[N]){
     double A[n+1];
     gaussEliminationLS(n+1,n+2,B,A);
     for(i=0;i<=n-1;i++)
-		printf("%lfx^%d+",A[i],i);
-	printf("%lfx^%d", A[n], n);
+		printf("%ex^%d+",A[i],i);
+	printf("%ex^%d", A[n], n);
 	return;
 }
 
