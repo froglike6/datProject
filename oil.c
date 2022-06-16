@@ -204,15 +204,15 @@ void dataAnisMain(int N, double y[N]){
 		scanf("%d", &n);
 	}
     int i,j;
-    double X[2*n+1];  
+    long double X[2*n+1];  
     for(i=0;i<=2*n;i++){
         X[i]=0;
         for(j=0;j<N;j++){
             X[i]=X[i]+pow(year[j],i);
         }
     }
-    double B[n+1][n+2];  
-    double Y[n+1];      
+    long double B[n+1][n+2];  
+    long double Y[n+1];      
     for(i=0;i<=n;i++){
         Y[i]=0;
         for(j=0;j<N;j++){
@@ -227,7 +227,7 @@ void dataAnisMain(int N, double y[N]){
     for(i=0;i<=n;i++){
         B[i][n+1]=Y[i];
     }
-    double A[n+1];
+    long double A[n+1];
     gaussEliminationLS(n+1,n+2,B,A);
     for(i=0;i<=n-1;i++)
 		printf("%ex^%d+",A[i],i);
@@ -305,7 +305,7 @@ void dataAnisMenu(int cur){
 	}
 }
 
-void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
+void gaussEliminationLS(int m, int n, long double a[m][n], long double x[n-1]){
     int i,j,k;
     for(i=0;i<m-1;i++){
         //Partial Pivoting
@@ -314,7 +314,7 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
             if(fabs(a[i][i])<fabs(a[k][i])){
                 //Swap the rows
                 for(j=0;j<n;j++){                
-                    double temp;
+                    long double temp;
                     temp=a[i][j];
                     a[i][j]=a[k][j];
                     a[k][j]=temp;
@@ -323,7 +323,7 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
         }
         //Begin Gauss Elimination
         for(k=i+1;k<m;k++){
-            double  term=a[k][i]/ a[i][i];
+            long double  term=a[k][i]/ a[i][i];
             for(j=0;j<n;j++){
                 a[k][j]=a[k][j]-term*a[i][j];
             }
