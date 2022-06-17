@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
-
+#include <memory.h>
 
 void setup();
 void dataShow();
@@ -191,15 +191,7 @@ void dataAnis(){
 		dataAnisMenu(cur);
 	}
 }
-void printMatrix(int m, int n, double matrix[m][n]){
-    int i,j;
-    for(i=0;i<m;i++){
-        for(j=0;j<n;j++){
-            printf("%lf\t",matrix[i][j]);
-        }
-        printf("\n");
-    } 
-}
+
 void dataAnisMain(int N, double y[N]){
 	int n=0;
 	system("cls");
@@ -213,9 +205,10 @@ void dataAnisMain(int N, double y[N]){
 		scanf("%d", &n);
 	}
 	int i, j;
-	double x[60];
-	for (int i=0; i<51; i++) x[i]=year[i];
-    double X[2*n+1];  
+	int x[60];
+	memcpy(x, year, sizeof(year));
+	
+	double X[2*n+1];
     for(i=0;i<=2*n;i++){
         X[i]=0;
         for(j=0;j<N;j++){
@@ -241,11 +234,14 @@ void dataAnisMain(int N, double y[N]){
         B[i][n+1]=Y[i];
     }
     double A[n+1];
-    printMatrix(n+1,n+2,B);
     gaussEliminationLS(n+1,n+2,B,A);
-    for(i=0;i<=n;i++){
-        printf("%lfx^%d+",A[i],i);
+    printf("%ex^%d",A[n],n);
+    for(i=n-1;i>0;i--){
+    	if (A[i]>0) printf("+");
+        printf("%ex^%d",A[i],i);
 	}
+	if (A[0]>0) printf("+");
+	printf("%e",A[0]);
 }
 
 void dataAnisMenu(int cur){
@@ -327,7 +323,7 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
             if(fabs(a[i][i])<fabs(a[k][i])){
                 //Swap the rows
                 for(j=0;j<n;j++){                
-                    long double temp;
+                    double temp;
                     temp=a[i][j];
                     a[i][j]=a[k][j];
                     a[k][j]=temp;
@@ -336,7 +332,7 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
         }
         //Begin Gauss Elimination
         for(k=i+1;k<m;k++){
-            long double  term=a[k][i]/ a[i][i];
+            double term=a[k][i]/ a[i][i];
             for(j=0;j<n;j++){
                 a[k][j]=a[k][j]-term*a[i][j];
             }
