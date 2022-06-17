@@ -8,6 +8,7 @@ void dataShow();
 void dataAnis();
 void dataAnisMenu(int cur);
 void dataAnisMain(int N, double y[N]);
+void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]);
 
 int year[60];
 double gasoline[60], diesel[60], kerosene[60];
@@ -190,7 +191,15 @@ void dataAnis(){
 		dataAnisMenu(cur);
 	}
 }
-
+void printMatrix(int m, int n, double matrix[m][n]){
+    int i,j;
+    for(i=0;i<m;i++){
+        for(j=0;j<n;j++){
+            printf("%lf\t",matrix[i][j]);
+        }
+        printf("\n");
+    } 
+}
 void dataAnisMain(int N, double y[N]){
 	int n=0;
 	system("cls");
@@ -203,20 +212,24 @@ void dataAnisMain(int N, double y[N]){
 		fflush(stdin);
 		scanf("%d", &n);
 	}
-    int i,j;
-    long double X[2*n+1];  
+	int i, j;
+	double x[60];
+	for (int i=0; i<51; i++) x[i]=year[i];
+    double X[2*n+1];  
     for(i=0;i<=2*n;i++){
         X[i]=0;
         for(j=0;j<N;j++){
-            X[i]=X[i]+pow(year[j],i);
+            X[i]=X[i]+pow(x[j],i);
         }
     }
-    long double B[n+1][n+2];  
-    long double Y[n+1];      
+    //the normal augmented matrix
+    double B[n+1][n+2];  
+    // rhs
+    double Y[n+1];      
     for(i=0;i<=n;i++){
         Y[i]=0;
         for(j=0;j<N;j++){
-            Y[i]=Y[i]+pow(year[j],i)*year[j];
+            Y[i]=Y[i]+pow(x[j],i)*y[j];
         }
     }
     for(i=0;i<=n;i++){
@@ -227,12 +240,12 @@ void dataAnisMain(int N, double y[N]){
     for(i=0;i<=n;i++){
         B[i][n+1]=Y[i];
     }
-    long double A[n+1];
+    double A[n+1];
+    printMatrix(n+1,n+2,B);
     gaussEliminationLS(n+1,n+2,B,A);
-    for(i=0;i<=n-1;i++)
-		printf("%ex^%d+",A[i],i);
-	printf("%ex^%d", A[n], n);
-	return;
+    for(i=0;i<=n;i++){
+        printf("%lfx^%d+",A[i],i);
+	}
 }
 
 void dataAnisMenu(int cur){
@@ -305,7 +318,7 @@ void dataAnisMenu(int cur){
 	}
 }
 
-void gaussEliminationLS(int m, int n, long double a[m][n], long double x[n-1]){
+void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
     int i,j,k;
     for(i=0;i<m-1;i++){
         //Partial Pivoting
