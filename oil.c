@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <memory.h>
 
+
 void setup();
 void dataShow();
 void dataAnis();
@@ -129,7 +130,57 @@ void menu(int cur){
 }
 
 void dataShow(){
-	
+	system("cls");
+	for (int i=0; i<100; i++) printf("=");
+	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	printf("[1]");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	printf(" 가솔린 데이터\n");
+	printf("[2] 디젤 데이터\n");
+	printf("[3] 케로신 데이터\n");
+	printf("[4] 자동차 데이터\n");
+	printf("[5] 뒤로 가기\n\n\n\n\n");
+	int cur=1;
+	while(1){
+		int key = _getch();
+		if (key == 224) {
+			key = _getch();
+			switch (key){
+				case 72:
+					if (cur>1 && cur<=6) cur--; 
+					break;
+				case 80:
+					if (cur>=0 && cur<5) cur++; 
+					break;
+				}
+		}
+		else if (key == 13){
+			switch (cur){
+				case 1:
+					coordinatePlane();
+					return;
+					break;
+				case 2:
+					
+					return;
+					break;
+				case 3:
+					
+					return;
+					break;
+				case 4:
+					
+					return;
+					break;
+				case 5:
+					setup();
+					return;
+					break;
+			}
+		}
+		dataAnisMenu(cur);
+	}	
 }
 
 void dataAnis(){
@@ -349,4 +400,10 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
     }
              
 }
+HWND hwnd;
+HDC hdc;
 
+void coordinatePlane(){
+	hwnd = GetForegroundWindow();
+	hdc = GetWindowDC(hwnd);
+}
