@@ -3,13 +3,13 @@
 #include <windows.h>
 #include <memory.h>
 
-
 void setup();
 void dataShow();
 void dataAnis();
 void dataAnisMenu(int cur);
 void dataAnisMain(int N, double y[N]);
 void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]);
+void gt(int x, int y);
 
 int year[60];
 double gasoline[60], diesel[60], kerosene[60];
@@ -46,7 +46,8 @@ void setup(){
 	system("mode con:cols=100 lines=50");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	SetConsoleTitle("전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측");
-	for (int i=0; i<100; i++) printf("=");
+	int i;
+	for (i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 	
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
@@ -91,10 +92,11 @@ void setup(){
 
 
 void menu(int cur){
+	int i;
 	switch (cur){
 		case 1:
 			system("cls");
-			for (int i=0; i<100; i++) printf("=");
+			for (i=0; i<100; i++) printf("=");
 			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 			printf("[1]");
@@ -105,7 +107,7 @@ void menu(int cur){
 			break;
 		case 2:
 			system("cls");
-			for (int i=0; i<100; i++) printf("=");
+			for (i=0; i<100; i++) printf("=");
 			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 			printf("[1] 데이터 보기\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
@@ -116,7 +118,7 @@ void menu(int cur){
 			break;
 		case 3:
 			system("cls");
-			for (int i=0; i<100; i++) printf("=");
+			for (i=0; i<100; i++) printf("=");
 			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 			printf("[1] 데이터 보기\n");
 			printf("[2] 데이터 분석\n");
@@ -130,8 +132,9 @@ void menu(int cur){
 }
 
 void dataShow(){
+	int i;
 	system("cls");
-	for (int i=0; i<100; i++) printf("=");
+	for (i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	printf("[1]");
@@ -185,7 +188,8 @@ void dataShow(){
 
 void dataAnis(){
 	system("cls");
-	for (int i=0; i<100; i++) printf("=");
+	int i;
+	for (i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	printf("[1]");
@@ -400,10 +404,34 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
     }
              
 }
-HWND hwnd;
-HDC hdc;
 
 void coordinatePlane(){
-	hwnd = GetForegroundWindow();
-	hdc = GetWindowDC(hwnd);
+	system("cls");
+	for (int i=0; i<100; i++) printf("=");
+	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n");
+	for (int i=0; i<20; i++) printf("|\n");
+	for (int i=0; i<100; i++) printf("-");
+	Sleep(10000);
+}
+
+void gt(int x, int y){
+	COORD pos={x,y};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
+}
+
+int max(int x){
+	int temp=0;
+	for (int i=0; i<51; i++){
+		if (x[i]>temp) temp = x[i];
+	}
+	return temp;
+}
+
+void graph(int y){
+	int max = max(y);
+	double mult = 51/max;
+	int x[51]={0, };
+	for (int i=0; i<51; i++){
+		
+	}
 }
