@@ -10,10 +10,15 @@ void dataAnisMenu(int cur);
 void dataAnisMain(int N, double y[N]);
 void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]);
 void gt(int x, int y);
-
+void graph(double y[60]);
+double mx(double x[60]);
+double mi(double x[60]);
+void menu(int cur);
+void coordinatePlane();
 int year[60];
+void home();
 double gasoline[60], diesel[60], kerosene[60];
-int car[60];
+double car[60];
 
 int main(){
 	int temp=0, i;
@@ -23,7 +28,7 @@ int main(){
 	if (data !=NULL){
 		fscanf(data, "%*[^\n]\n");
 		while (!feof(data)){
-			fscanf(data, "%d,%lf,%lf,%lf,%d\n", &year[temp], &gasoline[temp], &diesel[temp], &kerosene[temp], &car[temp]);
+			fscanf(data, "%d,%lf,%lf,%lf,%lf\n", &year[temp], &gasoline[temp], &diesel[temp], &kerosene[temp], &car[temp]);
 			temp++;
 		}
 	}
@@ -33,12 +38,6 @@ int main(){
 	}
 	fclose(data);
 	setup();
-	/*
-	//Print data of file
-	for (i=0; i<51; i++){
-		printf("%d, %lf, %lf, %lf, %d\n", year[i], gasoline[i], diesel[i], kerosene[i], car[i]);
-	}
-	*/
 	return 0;
 }
 
@@ -162,18 +161,26 @@ void dataShow(){
 			switch (cur){
 				case 1:
 					coordinatePlane();
+					graph(gasoline);
+					home();
 					return;
 					break;
 				case 2:
-					
+					coordinatePlane();
+					graph(diesel);
+					home();
 					return;
 					break;
 				case 3:
-					
+					coordinatePlane();
+					graph(kerosene);
+					home();
 					return;
 					break;
 				case 4:
-					
+					coordinatePlane();
+					graph(car);
+					home();
 					return;
 					break;
 				case 5:
@@ -220,21 +227,25 @@ void dataAnis(){
 				case 1:
 					for (int i=0; i<51; i++) y[i]=gasoline[i];
 					dataAnisMain(N, y);
+					home();
 					return;
 					break;
 				case 2:
 					for (int i=0; i<51; i++) y[i]=diesel[i];
 					dataAnisMain(N, y);
+					home();
 					return;
 					break;
 				case 3:
 					for (int i=0; i<51; i++) y[i]=kerosene[i];
 					dataAnisMain(N, y);
+					home();
 					return;
 					break;
 				case 4:
 					for (int i=0; i<51; i++) y[i]=car[i];
 					dataAnisMain(N, y);
+					home();
 					return;
 					break;
 				case 5:
@@ -296,7 +307,7 @@ void dataAnisMain(int N, double y[N]){
         printf("%ex^%d",A[i],i);
 	}
 	if (A[0]>0) printf("+");
-	printf("%e",A[0]);
+	printf("%e\n",A[0]);
 }
 
 void dataAnisMenu(int cur){
@@ -408,10 +419,11 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
 void coordinatePlane(){
 	system("cls");
 	for (int i=0; i<100; i++) printf("=");
-	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n");
-	for (int i=0; i<20; i++) printf("|\n");
-	for (int i=0; i<100; i++) printf("-");
-	Sleep(10000);
+	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n");
+	for (int i=0; i<20; i++) printf("│\n");
+	printf("└");
+	for (int i=2; i<100; i++) printf("─");
+	
 }
 
 void gt(int x, int y){
@@ -419,19 +431,38 @@ void gt(int x, int y){
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
 }
 
-int max(int x){
-	int temp=0;
+double mx(double x[60]){
+	double temp=x[0];
 	for (int i=0; i<51; i++){
 		if (x[i]>temp) temp = x[i];
 	}
 	return temp;
 }
-
-void graph(int y){
-	int max = max(y);
-	double mult = 51/max;
-	int x[51]={0, };
+double mi(double x[60]){
+	double temp=x[0];
 	for (int i=0; i<51; i++){
-		
+		if (temp>x[i]) temp = x[i];
 	}
+	return temp;
+}
+void graph(double y[60]){
+	double max = mx(y);
+	double min = mi(y);
+	int x[60]={0, };
+	for (int i=0; i<51; i++){
+		x[i]= ((y[i]-min)*20/(max-min))+0.5;
+		gt(i+1, 23-x[i]);
+		printf("*");
+	}
+	gt(0, 25);
+}
+void home(){
+	printf("엔터를 눌러 홈으로 돌아가기");
+	while (1){
+		int key = _getch();
+		if (key==13){
+			setup();
+		}
+	}
+	return;
 }
