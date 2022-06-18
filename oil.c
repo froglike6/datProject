@@ -24,32 +24,36 @@ int main(){
 	int temp=0, i;
 	
 	FILE *data = NULL;
-	data = fopen("data/oildata2.csv", "r");
+	data = fopen("data/oildata2.csv", "r");//데이터 불러오기
 	if (data !=NULL){
-		fscanf(data, "%*[^\n]\n");
+		fscanf(data, "%*[^\n]\n");//첫번째 행을 먼저 불러와서 두번째 행부터 인식하도록 함.
 		while (!feof(data)){
-			fscanf(data, "%d,%lf,%lf,%lf,%lf\n", &year[temp], &gasoline[temp], &diesel[temp], &kerosene[temp], &car[temp]);
+			fscanf(data, "%d,%lf,%lf,%lf,%lf\n", &year[temp], &gasoline[temp], &diesel[temp], &kerosene[temp], &car[temp]);//각각의 값을 배열에 넣는다
 			temp++;
 		}
 	}
 	else{
-		printf("Failed to open file. Please check.");
+		printf("Failed to open file. Please check.");//파일 열기 실패시 작동
 		return -1;
 	}
 	fclose(data);
-	setup();
+	setup();//다음 함수로 넘어감
 	return 0;
 }
 
 void setup(){
-	system("mode con:cols=100 lines=50");
+	CONSOLE_CURSOR_INFO cursorInfo = { 0, };
+	cursorInfo.dwSize = 1;
+	cursorInfo.bVisible = FALSE;//커서를 안보이게 하는 설정
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+	system("mode con:cols=100 lines=26");//콘솔 창 사이즈 설정
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-	SetConsoleTitle("전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측");
+	SetConsoleTitle("2318 주도현");//제목 설정
 	int i;
 	for (i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 	
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!
 	printf("[1]");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printf(" 데이터 보기\n");
