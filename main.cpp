@@ -3,13 +3,13 @@
 #include <windows.h>
 #include <memory.h>
 #include <math.h>
-
+#include <graphics.h>
 void setup();
 void dataShow();
 void dataAnis();
 void dataAnisMenu(int cur);
-void dataAnisMain(int N, double y[N]);
-void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]);
+void dataAnisMain(int N, double y[]);
+void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]);
 void gt(int x, int y);
 void graph(double y[60]);
 double mx(double x[60]);
@@ -252,7 +252,7 @@ void dataAnis(){//데이터 분석 함수
 	}
 }
 
-void dataAnisMain(int N, double y[N]){
+void dataAnisMain(int N, double y[1<<10]){
 	int n=0;
 	mainmenu();
 	printf("회귀할 데이터의 차수를 입력(0<n<11): ");//n차항 식으로 회귀할때, n을 받음
@@ -273,7 +273,7 @@ void dataAnisMain(int N, double y[N]){
             X[i]=X[i]+pow(x[j],i);
         }
     }
-    double B[n+1][n+2];  
+    double B[n+1][1<<10];  
     double Y[n+1];      
     for(i=0;i<=n;i++){
         Y[i]=0;
@@ -361,7 +361,7 @@ void dataAnisMenu(int cur){//데이터 메뉴 선택 함수
 	}
 }
 
-void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){//가우스 소거법
+void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]){//가우스 소거법
     int i,j,k;
     for(i=0;i<m-1;i++){
         for(k=i+1;k<m;k++){
