@@ -4,24 +4,24 @@
 #include <memory.h>
 #include <math.h>
 #include <graphics.h>
+#include <direct.h>
 void setup();
 void dataShow();
 void dataAnis();
 void dataAnisMenu(int cur);
 void dataAnisMain(int N, double y[]);
 void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]);
-void gt(int x, int y);
 void graph(double y[60]);
-double mx(double x[60]);
-double mi(double x[60]);
+void graphcar(double y[60]);
 void menu(int cur);
 void mainmenu();
-void coordinatePlane();
 int year[60];
 void home();
 double gasoline[60], diesel[60], kerosene[60];
 double car[60];
-
+char strBuffer[260]={0, };
+char *pstrBuffer = NULL;
+char msg[300];
 int main(){
 	int temp=0, i;
 	
@@ -39,7 +39,8 @@ int main(){
 		return -1;
 	}
 	fclose(data);
-	setup();//다음 함수로 넘어감
+	pstrBuffer = getcwd(strBuffer, 260);
+	setup();
 	return 0;
 }
 
@@ -51,6 +52,7 @@ void setup(){
 	system("mode con:cols=100 lines=26");//콘솔 창 사이즈 설정
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	SetConsoleTitle("2318 주도현");//제목 설정
+	system("cls");
 	int i;
 	for (i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
@@ -157,26 +159,22 @@ void dataShow(){//데이터 보여주는 함수
 		else if (key == 13){
 			switch (cur){
 				case 1:
-					coordinatePlane();//좌표평면 출력하는 함수
 					graph(gasoline);//gasoline에 대한 그래프 출력
 					home();//홈으로 돌아가는 함수
 					return;
 					break;
 				case 2:
-					coordinatePlane();
 					graph(diesel);
 					home();
 					return;
 					break;
 				case 3:
-					coordinatePlane();
 					graph(kerosene);
 					home();
 					return;
 					break;
 				case 4:
-					coordinatePlane();
-					graph(car);
+					graphcar(car);
 					home();
 					return;
 					break;
@@ -391,45 +389,31 @@ void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]){//가우스 소
              
 }
 
-void coordinatePlane(){//좌표평면
-	system("cls");
-	for (int i=0; i<100; i++) printf("=");
-	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n");
-	for (int i=0; i<20; i++) printf("│\n");
-	printf("└");
-	for (int i=2; i<100; i++) printf("─");
-	
-}
-
-void gt(int x, int y){//커서 옮김
-	COORD pos={x,y};
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
-}
-
-double mx(double x[60]){//최댓값 리턴
-	double temp=x[0];
-	for (int i=0; i<51; i++){
-		if (x[i]>temp) temp = x[i];
-	}
-	return temp;
-}
-double mi(double x[60]){//최솟값 리턴
-	double temp=x[0];
-	for (int i=0; i<51; i++){
-		if (temp>x[i]) temp = x[i];
-	}
-	return temp;
-}
 void graph(double y[60]){//그래프 그리는 함수
-	double max = mx(y);
-	double min = mi(y);
-	int x[60]={0, };
-	for (int i=0; i<51; i++){
-		x[i]= ((y[i]-min)*20/(max-min))+0.5;//높이가 20인 칸에 표시하기 위해 최소를 0, 최대를 20으로 한 뒤 반올림
-		gt(i+1, 23-x[i]);//커서 옮겨서
-		printf("*");//별 찍기
+	int gd=0, gm;
+	initwindow(640, 1000);
+	int data[60]={0, };
+	line(0, 1000, 12, 1000-(int)y[1]/2);
+	for (int i=1;i<50;i++){
+		line(i*12, 1000-(int)y[i]/2, (i+1)*12, 1000-(int)y[i+1]/2);
 	}
-	gt(0, 25);
+    sprintf(msg, "%s\\main.exe", pstrBuffer);
+	system(msg);
+	getch();
+}           
+	
+void graphcar(double y[60]){//자동차그래프 그리는 함수
+	int gd=0, gm;
+	initwindow(640, 1000);
+	int data[60]={0, };
+	line(0, 1000, 12, 1000-(int)y[1]/25000);
+	for (int i=1;i<50;i++){
+		delay(1000);
+		line(i*12, 1000-(int)y[i]/25000, (i+1)*12, 1000-(int)y[i+1]/25000);
+	}
+	sprintf(msg, "%s\\main.exe", pstrBuffer);
+	system(msg);
+	getch();	
 }
 void home(){
 	printf("엔터를 눌러 홈으로 돌아가기");
@@ -441,7 +425,6 @@ void home(){
 	}
 	return;
 }
-
 void mainmenu(){//많이 사용되어 따로 빼둠
 	int i;
 	system("cls");
