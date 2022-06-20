@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <memory.h>
+#include <math.h>
 
 void setup();
 void dataShow();
