@@ -15,6 +15,7 @@ void graph(double y[60]);
 double mx(double x[60]);
 double mi(double x[60]);
 void menu(int cur);
+void mainmenu();
 void coordinatePlane();
 int year[60];
 void home();
@@ -63,45 +64,43 @@ void setup(){
 	
 	int cur=1;
 	while(1){
-		int key = _getch();
-		if (key == 13){
+		int key = _getch();//키 입력
+		if (key == 13){//엔터
 			switch (cur){
 				case 1:
-					dataShow();
+					dataShow();//데이터 보기 함수
 					break;
 				case 2:
-					dataAnis();
+					dataAnis();//데이터 분석 함수 
 					return;
 					break;
 				case 3:
 					printf("Bye!");
-					exit(0);
+					exit(0);//return보다 강력한 종료 함수
 					break;
 			}
 		}
-		else if (key == 224) {
-			key = _getch();
+		else if (key == 224) {//방향키라면
+			key = _getch();//한번 더 입력 받음
 			switch (key){
-				case 72:
+				case 72://위 화살표 
 					if (cur>1 && cur<=4) cur--; 
 					break;
-				case 80:
+				case 80://아래 화살표
 					if (cur>=0 && cur<3) cur++; 
 					break;
 				}
 		}
-		menu(cur);
+		menu(cur);//커서 색 변환 위한 함수
 	}
 }
 
 
 void menu(int cur){
 	int i;
-	switch (cur){
+	switch (cur){//각각의 케이스에 대해 색을 바꿈
 		case 1:
-			system("cls");
-			for (i=0; i<100; i++) printf("=");
-			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			mainmenu();//제목 적는 함수
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 			printf("[1]");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -110,9 +109,7 @@ void menu(int cur){
 			printf("[3] 나가기\n\n\n\n\n");
 			break;
 		case 2:
-			system("cls");
-			for (i=0; i<100; i++) printf("=");
-			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			mainmenu();
 			printf("[1] 데이터 보기\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 			printf("[2]");
@@ -121,9 +118,7 @@ void menu(int cur){
 			printf("[3] 나가기\n\n\n\n\n");
 			break;
 		case 3:
-			system("cls");
-			for (i=0; i<100; i++) printf("=");
-			printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+			mainmenu();
 			printf("[1] 데이터 보기\n");
 			printf("[2] 데이터 분석\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
@@ -135,11 +130,8 @@ void menu(int cur){
 	}
 }
 
-void dataShow(){
-	int i;
-	system("cls");
-	for (i=0; i<100; i++) printf("=");
-	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+void dataShow(){//데이터 보여주는 함수
+	mainmenu();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	printf("[1]");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -165,9 +157,9 @@ void dataShow(){
 		else if (key == 13){
 			switch (cur){
 				case 1:
-					coordinatePlane();
-					graph(gasoline);
-					home();
+					coordinatePlane();//좌표평면 출력하는 함수
+					graph(gasoline);//gasoline에 대한 그래프 출력
+					home();//홈으로 돌아가는 함수
 					return;
 					break;
 				case 2:
@@ -198,11 +190,8 @@ void dataShow(){
 	}	
 }
 
-void dataAnis(){
-	system("cls");
-	int i;
-	for (i=0; i<100; i++) printf("=");
-	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+void dataAnis(){//데이터 분석 함수
+	mainmenu();
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	printf("[1]");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -230,9 +219,9 @@ void dataAnis(){
 		else if (key == 13){
 			switch (cur){
 				case 1:
-					for (int i=0; i<51; i++) y[i]=gasoline[i];
-					dataAnisMain(N, y);
-					home();
+					for (int i=0; i<51; i++) y[i]=gasoline[i];//가솔린 선택하면, y 배열에 가솔린 배열 넣음
+					dataAnisMain(N, y);//데이터 메인 분석 함수 호출
+					home();//홈으로 가는 함수
 					return;
 					break;
 				case 2:
@@ -265,19 +254,17 @@ void dataAnis(){
 
 void dataAnisMain(int N, double y[N]){
 	int n=0;
-	system("cls");
-	for (int i=0; i<100; i++) printf("=");
-	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
-	printf("회귀할 데이터의 차수를 입력(0<n<11): ");
+	mainmenu();
+	printf("회귀할 데이터의 차수를 입력(0<n<11): ");//n차항 식으로 회귀할때, n을 받음
 	scanf("%d", &n);
-	while (n<1 || n>10){
+	while (n<1 || n>10){//예외 처리
 		printf("\n다시 입력: ");
-		fflush(stdin);
+		fflush(stdin);//버퍼 비우기
 		scanf("%d", &n);
 	}
 	int i, j;
 	int x[60];
-	memcpy(x, year, sizeof(year));
+	memcpy(x, year, sizeof(year));//간단하게 배열 복사 위한 메모리 복사
 	
 	double X[2*n+1];
     for(i=0;i<=2*n;i++){
@@ -286,9 +273,7 @@ void dataAnisMain(int N, double y[N]){
             X[i]=X[i]+pow(x[j],i);
         }
     }
-    //the normal augmented matrix
     double B[n+1][n+2];  
-    // rhs
     double Y[n+1];      
     for(i=0;i<=n;i++){
         Y[i]=0;
@@ -306,6 +291,7 @@ void dataAnisMain(int N, double y[N]){
     }
     double A[n+1];
     gaussEliminationLS(n+1,n+2,B,A);
+    //회귀식 출력
     printf("%ex^%d",A[n],n);
     for(i=n-1;i>0;i--){
     	if (A[i]>0) printf("+");
@@ -315,12 +301,10 @@ void dataAnisMain(int N, double y[N]){
 	printf("%e\n",A[0]);
 }
 
-void dataAnisMenu(int cur){
+void dataAnisMenu(int cur){//데이터 메뉴 선택 함수
 	switch (cur){
 			case 1:
-				system("cls");
-				for (int i=0; i<100; i++) printf("=");
-				printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+				mainmenu();
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 				printf("[1]");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
@@ -331,9 +315,7 @@ void dataAnisMenu(int cur){
 				printf("[5] 뒤로 가기\n\n\n\n\n");
 				break;
 			case 2:
-				system("cls");
-				for (int i=0; i<100; i++) printf("=");
-				printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+				mainmenu();
 				printf("[1] 가솔린 데이터\n");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 				printf("[2]");
@@ -344,9 +326,7 @@ void dataAnisMenu(int cur){
 				printf("[5] 뒤로 가기\n\n\n\n\n");
 				break;
 			case 3:
-				system("cls");
-				for (int i=0; i<100; i++) printf("=");
-				printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+				mainmenu();
 				printf("[1] 가솔린 데이터\n");
 				printf("[2] 디젤 데이터\n");
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
@@ -357,9 +337,7 @@ void dataAnisMenu(int cur){
 				printf("[5] 뒤로 가기\n\n\n\n\n");
 				break;
 			case 4:
-				system("cls");
-				for (int i=0; i<100; i++) printf("=");
-				printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+				mainmenu();
 				printf("[1] 가솔린 데이터\n");
 				printf("[2] 디젤 데이터\n");
 				printf("[3] 케로신 데이터\n");
@@ -370,9 +348,7 @@ void dataAnisMenu(int cur){
 				printf("[5] 뒤로 가기\n\n\n\n\n");
 				break;
 			case 5:
-				system("cls");
-				for (int i=0; i<100; i++) printf("=");
-				printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
+				mainmenu();
 				printf("[1] 가솔린 데이터\n");
 				printf("[2] 디젤 데이터\n");
 				printf("[3] 케로신 데이터\n");
@@ -385,14 +361,11 @@ void dataAnisMenu(int cur){
 	}
 }
 
-void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
+void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){//가우스 소거법
     int i,j,k;
     for(i=0;i<m-1;i++){
-        //Partial Pivoting
         for(k=i+1;k<m;k++){
-            //If diagonal element(absolute vallue) is smaller than any of the terms below it
             if(fabs(a[i][i])<fabs(a[k][i])){
-                //Swap the rows
                 for(j=0;j<n;j++){                
                     double temp;
                     temp=a[i][j];
@@ -401,16 +374,13 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
                 }
             }
         }
-        //Begin Gauss Elimination
         for(k=i+1;k<m;k++){
             double term=a[k][i]/ a[i][i];
             for(j=0;j<n;j++){
                 a[k][j]=a[k][j]-term*a[i][j];
             }
-        }
-         
+        }  
     }
-    //Begin Back-substitution
     for(i=m-1;i>=0;i--){
         x[i]=a[i][n-1];
         for(j=i+1;j<n-1;j++){
@@ -421,7 +391,7 @@ void gaussEliminationLS(int m, int n, double a[m][n], double x[n-1]){
              
 }
 
-void coordinatePlane(){
+void coordinatePlane(){//좌표평면
 	system("cls");
 	for (int i=0; i<100; i++) printf("=");
 	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n");
@@ -431,33 +401,33 @@ void coordinatePlane(){
 	
 }
 
-void gt(int x, int y){
+void gt(int x, int y){//커서 옮김
 	COORD pos={x,y};
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
 }
 
-double mx(double x[60]){
+double mx(double x[60]){//최댓값 리턴
 	double temp=x[0];
 	for (int i=0; i<51; i++){
 		if (x[i]>temp) temp = x[i];
 	}
 	return temp;
 }
-double mi(double x[60]){
+double mi(double x[60]){//최솟값 리턴
 	double temp=x[0];
 	for (int i=0; i<51; i++){
 		if (temp>x[i]) temp = x[i];
 	}
 	return temp;
 }
-void graph(double y[60]){
+void graph(double y[60]){//그래프 그리는 함수
 	double max = mx(y);
 	double min = mi(y);
 	int x[60]={0, };
 	for (int i=0; i<51; i++){
-		x[i]= ((y[i]-min)*20/(max-min))+0.5;
-		gt(i+1, 23-x[i]);
-		printf("*");
+		x[i]= ((y[i]-min)*20/(max-min))+0.5;//높이가 20인 칸에 표시하기 위해 최소를 0, 최대를 20으로 한 뒤 반올림
+		gt(i+1, 23-x[i]);//커서 옮겨서
+		printf("*");//별 찍기
 	}
 	gt(0, 25);
 }
@@ -465,9 +435,16 @@ void home(){
 	printf("엔터를 눌러 홈으로 돌아가기");
 	while (1){
 		int key = _getch();
-		if (key==13){
-			setup();
+		if (key==13){//엔터 누르면
+			setup();//홈으로
 		}
 	}
 	return;
+}
+
+void mainmenu(){//많이 사용되어 따로 빼둠
+	int i;
+	system("cls");
+	for (i=0; i<100; i++) printf("=");
+	printf("          전국 평균 유가와 자동차 등록 대수의 상관관계 및 자동차 등록 대수 예측 프로그램\n\n\n\n\n");
 }
