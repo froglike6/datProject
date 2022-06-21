@@ -1,5 +1,5 @@
 /*
-v8.2-beta2(added version)
+v8.2-beta3(Some test)
 */
 #include <stdio.h>
 #include <conio.h>
@@ -391,9 +391,8 @@ void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]){//가우스 소
     }
              
 }
-
 void graph(double y[60]){//그래프 그리는 함수
-	int gd=0, gm;
+	int gd=0, gm, status;
 	initwindow(640, 1000);
 	int data[60]={0, };
 	line(0, 1000, 12, 1000-(int)y[1]/2);
@@ -403,8 +402,7 @@ void graph(double y[60]){//그래프 그리는 함수
     sprintf(msg, "%s\\main.exe", pstrBuffer);
 	system(msg);
 	getch();
-}           
-	
+}
 void graphcar(double y[60]){//자동차그래프 그리는 함수
 	int gd=0, gm;
 	initwindow(640, 1000);
