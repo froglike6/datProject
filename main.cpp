@@ -1,18 +1,19 @@
-/*#############################################################################################################
-#v8.3-rc2(Emergency update)                    														  #
-#Á¦¸ñ: Àü±¹ À¯°¡¿Í ÀÚµ¿Â÷ µî·Ï ´ë¼ö Ãß¼¼ ºĞ¼® ÇÁ·Î±×·¥ 														#
-#ÀÛ¼ºÀÚ: 2318 ÁÖµµÇö                                   														#
-#À¯°¡ Á¤º¸ ÃâÃ³: ÇÑ±¹¼®À¯°ø»ç ¿ÀÇÇ³İ(https://www.opinet.co.kr/user/opdown/opDownload.do)                      #
-#ÀÚµ¿Â÷ µî·Ï ´ë¼ö ÃâÃ³: Åë°èÃ» e-³ª¶óÁöÇ¥(https://www.index.go.kr/potal/main/EachDtlPageDetail.do?idx_cd=1257)#
-#32ºñÆ® È¯°æ¿¡¼­ ÄÄÆÄÀÏ ÈÄ exe ÆÄÀÏ ½ÇÇà																		#
-#############################################################################################################*/
+/*#################################################################################################################################
+#v8.4-rc1(Colorful menu, Add graph title, Some bug edited)     														  		  	  #
+#Á¦¸ñ: Àü±¹ À¯°¡¿Í ÀÚµ¿Â÷ µî·Ï ´ë¼ö Ãß¼¼ ºĞ¼® ÇÁ·Î±×·¥ 														  					  #
+#ÀÛ¼ºÀÚ: 2318 ÁÖµµÇö                                   														  					  #
+#À¯°¡ Á¤º¸ ÃâÃ³: ÇÑ±¹¼®À¯°ø»ç ¿ÀÇÇ³İ(https://www.opinet.co.kr/user/opdown/opDownload.do)                      					  #
+#ÀÚµ¿Â÷ µî·Ï ´ë¼ö ÃâÃ³: Åë°èÃ» e-³ª¶óÁöÇ¥(https://www.index.go.kr/potal/main/EachDtlPageDetail.do?idx_cd=1257)					  #
+#32ºñÆ® È¯°æ¿¡¼­ ÄÄÆÄÀÏ ÈÄ exe ÆÄÀÏ ½ÇÇà																						  #
+#°°ÀÌ ÀÖ´Â Çì´õ ÆÄÀÏ°ú Á¤Àû ¶óÀÌºê·¯¸® ÆÄÀÏ includeÈÄ ÄÄÆÄÀÏ·¯¿¡ -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32 Ãß°¡ ÈÄ ÄÄÆÄÀÏ#
+#################################################################################################################################*/
 
 #include <stdio.h>
 #include <conio.h>   //Å° ÀÔ·Â ¹Ş´Â _getch ÇÔ¼ö »ç¿ë
 #include <math.h>    //¼öÇĞ °è»ê
 #include <graphics.h>//±×·¡ÇÁ Ãâ·Â
-#include <unistd.h>
-#include <windows.h>
+#include <unistd.h>  //ÇöÀç µğ·ºÅÍ¸® ÀúÀå
+
 void setup();                              					         //Ã¹ È­¸é¿¡¼­ ¸Ş´º ¼±ÅÃÇÏ´Â ÇÔ¼ö
 void dataShow();													 //µ¥ÀÌÅÍ º¸¿©ÁÖ´Â ÇÔ¼ö
 void dataAnis();													 //µ¥ÀÌÅÍ ºĞ¼®ÇÏ´Â ÆäÀÌÁö
@@ -24,9 +25,12 @@ void graphcar(double y[60]);										 //ÀÚµ¿Â÷ ±×·¡ÇÁ ±×¸®´Â ÇÔ¼ö(°ªÀÌ Ä¿ ºĞ¸®Ç
 void menu(int cur);													 //¸ŞÀÎ ¸Ş´º
 void mainmenu();													 //Á¦¸ñ Ãâ·ÂÇÏ´Â ÇÔ¼ö(¸¹ÀÌ »ç¿ëÇØ ºĞ¸®ÇÔ)
 void home();														 //È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
+void specialmainmenu();                                              //Æ¯º°ÇÑ Á¦¸ñ
+
 int year[60];											//¿¬µµ ¹è¿­
 double gasoline[60], diesel[60], kerosene[60], car[60]; //°¢°¢ÀÇ µ¥ÀÌÅÍ¿¡ ´ëÇÑ ¹è¿­
-char strBuffer[260]={0, }, *pstrBuffer = NULL, msg[300];//ÇöÀç µğ·ºÅÍ¸® ÀúÀåÇÏ´Â ¹è¿­
+char strBuffer[260]={0, }, *pstrBuffer = NULL, msg[300], name[100], date[100], boool;//ÇöÀç µğ·ºÅÍ¸®, º¯¼ö ÀÌ¸§, ¸ŞÀÎ È­¸é ½ÇÇà ¿©ºÎ ÀúÀåÇÏ´Â ¹è¿­
+
 int main(){
 	int temp=0, i;
 	FILE *data = NULL;
@@ -57,7 +61,7 @@ void setup(){
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	SetConsoleTitle("Àü±¹ À¯°¡¿Í ÀÚµ¿Â÷ µî·Ï ´ë¼ö Ãß¼¼ ºĞ¼® ÇÁ·Î±×·¥");//Á¦¸ñ ¼³Á¤
 	system("cls");//È­¸é Áö¿ò
-	mainmenu();//Á¦¸ñ Ãâ·Â
+	specialmainmenu();//Æ¯º°ÇÑ Á¦¸ñ Ãâ·Â 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//»ö»ó ¹İÀü!(Bin 1111 0000 ÀÌ¹Ç·Î ¹è°æ»öÀÌ Èò»ö, ±ÛÀÚ»öÀÌ °ËÁ¤»ö)
 	printf("[1]");
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//»ö»ó ¹İÀü!(Bin 0000 1111 ÀÌ¹Ç·Î ¹è°æ»öÀÌ °ËÁ¤»ö, ±ÛÀÚ»öÀÌ Èò»ö)
@@ -86,14 +90,13 @@ void setup(){
 			key = _getch();//ÇÑ¹ø ´õ ÀÔ·Â ¹ŞÀ½(À§ È­»ìÇ¥ÀÇ °ªÀº 224 72, ¾Æ·¡ È­»ìÇ¥ÀÇ °ªÀº 224 80)
 			switch (key){
 				case 72://À§ È­»ìÇ¥ 
-					if (cur>1 && cur<=4) cur--;//Ä¿¼­¸¦ À§·Î
+					if (cur>1 && cur<=4) {cur--; menu(cur);}//Ä¿¼­¸¦ À§·Î
 					break;
 				case 80://¾Æ·¡ È­»ìÇ¥
-					if (cur>=0 && cur<3) cur++;//Ä¿¼­¸¦ ¾Æ·¡·Î
+					if (cur>=0 && cur<3) {cur++; menu(cur);}//Ä¿¼­¸¦ ¾Æ·¡·Î
 					break;
-				}
+				}//¹İÀÀ ¼Óµµ¿Í È­¸é ±ôºıÀÓ ¹æÁö À§ÇØ case ¸¶´Ù menu ÇÔ¼ö¸¦ ³ÖÀ½. 
 		}
-		menu(cur);//Ä¿¼­ »ö º¯È¯ À§ÇÑ ÇÔ¼ö
 	}
 }
 
@@ -147,31 +150,35 @@ void dataShow(){//µ¥ÀÌÅÍ º¸¿©ÁÖ´Â ÇÔ¼ö
 			key = _getch();//ÇÑ¹ø ´õ ÀÔ·Â ¹ŞÀ½(À§ È­»ìÇ¥ÀÇ °ªÀº 224 72, ¾Æ·¡ È­»ìÇ¥ÀÇ °ªÀº 224 80)
 			switch (key){
 				case 72://À§ È­»ìÇ¥ 
-					if (cur>1 && cur<=6) cur--;//Ä¿¼­¸¦ À§·Î
+					if (cur>1 && cur<=6) {cur--; dataAnisMenu(cur);}//Ä¿¼­¸¦ À§·Î
 					break;
 				case 80://¾Æ·¡ È­»ìÇ¥
-					if (cur>=0 && cur<5) cur++;//Ä¿¼­¸¦ ¾Æ·¡·Î
+					if (cur>=0 && cur<5) {cur++; dataAnisMenu(cur);}//Ä¿¼­¸¦ ¾Æ·¡·Î
 					break;
-				}
+				}//¹İÀÀ ¼Óµµ¿Í È­¸é ±ôºıÀÓ ¹æÁö À§ÇØ case ¸¶´Ù dataAnisMenu ÇÔ¼ö¸¦ ³ÖÀ½.
 		}
 		else if (key == 13){//¿£ÅÍ
 			switch (cur){
 				case 1:
+					strcpy(name, "Gasoline");
 					graph(gasoline);//gasoline¿¡ ´ëÇÑ ±×·¡ÇÁ Ãâ·Â
 					home();//È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
 					return;
 					break;
 				case 2:
+					strcpy(name, "Diesel");
 					graph(diesel);//diesel¿¡ ´ëÇÑ ±×·¡ÇÁ Ãâ·Â
 					home();//È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
 					return;
 					break;
 				case 3:
+					strcpy(name, "Kerosene");
 					graph(kerosene);//kerosene¿¡ ´ëÇÑ ±×·¡ÇÁ Ãâ·Â
 					home();//È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
 					return;
 					break;
 				case 4:
+					strcpy(name, "Car");
 					graphcar(car);//car¿¡ ´ëÇÑ ±×·¡ÇÁ Ãâ·Â
 					home();//È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
 					return;
@@ -182,7 +189,6 @@ void dataShow(){//µ¥ÀÌÅÍ º¸¿©ÁÖ´Â ÇÔ¼ö
 					break;
 			}
 		}
-		dataAnisMenu(cur);//Ä¿¼­ »ö º¯È¯ À§ÇÑ ÇÔ¼ö
 	}	
 }
 
@@ -205,12 +211,12 @@ void dataAnis(){//µ¥ÀÌÅÍ ºĞ¼® ÇÔ¼ö
 			key = _getch();//ÇÑ¹ø ´õ ÀÔ·Â ¹ŞÀ½(À§ È­»ìÇ¥ÀÇ °ªÀº 224 72, ¾Æ·¡ È­»ìÇ¥ÀÇ °ªÀº 224 80)
 			switch (key){
 				case 72://À§ È­»ìÇ¥ 
-					if (cur>1 && cur<=6) cur--;//Ä¿¼­¸¦ À§·Î
+					if (cur>1 && cur<=6) {cur--; dataAnisMenu(cur);}//Ä¿¼­¸¦ À§·Î
 					break;
 				case 80://¾Æ·¡ È­»ìÇ¥
-					if (cur>=0 && cur<5) cur++;//Ä¿¼­¸¦ ¾Æ·¡·Î
+					if (cur>=0 && cur<5) {cur++; dataAnisMenu(cur);}//Ä¿¼­¸¦ ¾Æ·¡·Î
 					break;
-				}
+				}//¹İÀÀ ¼Óµµ¿Í È­¸é ±ôºıÀÓ ¹æÁö À§ÇØ case ¸¶´Ù dataAnisMenu ÇÔ¼ö¸¦ ³ÖÀ½.
 		}
 		else if (key == 13){//¿£ÅÍ
 			switch (cur){
@@ -244,7 +250,6 @@ void dataAnis(){//µ¥ÀÌÅÍ ºĞ¼® ÇÔ¼ö
 					break;
 			}
 		}
-		dataAnisMenu(cur);//Ä¿¼­ »ö º¯È¯ À§ÇÑ ÇÔ¼ö
 	}
 }
 
@@ -372,6 +377,9 @@ void graph(double y[60]){//±×·¡ÇÁ ±×¸®´Â ÇÔ¼ö
 	initwindow(640, 1000);//Ã¢ Å©±â ¼³Á¤
 	line(0, 1000, 12, 1000-(int)y[1]/2);//Ã¹¹øÂ° ¼± ±ß±â
 	for (int i=1;i<50;i++) line(i*12, 1000-(int)y[i]/2, (i+1)*12, 1000-(int)y[i+1]/2);//¸ğµç ¼± ±ß±â
+	settextstyle(9,0,5);
+	outtextxy(0, 0, name);//¿ŞÂÊ »ó´Ü Á¦¸ñ Ãâ·Â 
+	for (int i=0; i<100; i++) name[i]=0;//¹è¿­ ÃÊ±âÈ­
     sprintf(msg, "%s\\main.exe", pstrBuffer);//msg¿¡ ÇöÀç ÇÁ·Î±×·¥ À§Ä¡ ÀúÀå
 	system(msg);//ÇöÀç ÇÁ·Î±×·¥ ´Ù½Ã ½ÇÇà(±×·¡ÇÁ Ãâ·Â½Ã exitµÊ)
 }
@@ -380,6 +388,9 @@ void graphcar(double y[60]){//ÀÚµ¿Â÷±×·¡ÇÁ ±×¸®´Â ÇÔ¼ö
 	initwindow(640, 1000);//Ã¢ Å©±â ¼³Á¤
 	line(0, 1000, 12, 1000-(int)y[1]/25000);//Ã¹¹øÂ° ¼± ±ß±â
 	for (int i=1;i<50;i++) line(i*12, 1000-(int)y[i]/25000, (i+1)*12, 1000-(int)y[i+1]/25000);//¸ğµç ¼± ±ß±â
+	settextstyle(9,0,5);
+	outtextxy(0, 0, name);//¿ŞÂÊ »ó´Ü Á¦¸ñ Ãâ·Â 
+	for (int i=0; i<100; i++) name[i]=0;//¹è¿­ ÃÊ±âÈ­ 
 	sprintf(msg, "%s\\main.exe", pstrBuffer);//msg¿¡ ÇöÀç ÇÁ·Î±×·¥ À§Ä¡ ÀúÀå
 	system(msg);//ÇöÀç ÇÁ·Î±×·¥ ´Ù½Ã ½ÇÇà(±×·¡ÇÁ Ãâ·Â½Ã exitµÊ)
 }
@@ -395,6 +406,22 @@ void home(){//È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
 
 void mainmenu(){//¸¹ÀÌ »ç¿ëµÇ¾î µû·Î »©µÒ
 	system("cls");
-	for (int i=0; i<100; i++) printf("=");
+	for (int i=0; i<100; i++) {SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i%15); printf("=");}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	printf("                         Àü±¹ À¯°¡¿Í ÀÚµ¿Â÷ µî·Ï ´ë¼ö Ãß¼¼ ºĞ¼® ÇÁ·Î±×·¥\n\n\n\n\n");
+}
+
+void specialmainmenu(){//Æ¯º°ÇÑ ¸ŞÀÎ¸Ş´º
+	if (!boool){ 
+		system("cls");
+		for (int i=0; i<100; i++) { delay(1); SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i%15); printf("=");}
+		printf("                         ");
+		char title[100]={0, };
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+		sprintf(title, "Àü±¹ À¯°¡¿Í ÀÚµ¿Â÷ µî·Ï ´ë¼ö Ãß¼¼ ºĞ¼® ÇÁ·Î±×·¥");
+		for(int i=0; title[i]; i++) {delay(1); printf("%c", title[i]);}
+		printf("\n\n\n\n\n"); delay(1);
+		boool=1;
+	}
+	else mainmenu();
 }
