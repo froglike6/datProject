@@ -1,5 +1,5 @@
 /*#############################################################################################################
-#v8.3-rc1(Add comment, Latest beta)                    														  #
+#v8.3-rc2(Emergency update)                    														  #
 #Á¦¸ñ: Àü±¹ À¯°¡¿Í ÀÚµ¿Â÷ µî·Ï ´ë¼ö Ãß¼¼ ºĞ¼® ÇÁ·Î±×·¥ 														#
 #ÀÛ¼ºÀÚ: 2318 ÁÖµµÇö                                   														#
 #À¯°¡ Á¤º¸ ÃâÃ³: ÇÑ±¹¼®À¯°ø»ç ¿ÀÇÇ³İ(https://www.opinet.co.kr/user/opdown/opDownload.do)                      #
@@ -11,7 +11,8 @@
 #include <conio.h>   //Å° ÀÔ·Â ¹Ş´Â _getch ÇÔ¼ö »ç¿ë
 #include <math.h>    //¼öÇĞ °è»ê
 #include <graphics.h>//±×·¡ÇÁ Ãâ·Â
-
+#include <unistd.h>
+#include <windows.h>
 void setup();                              					         //Ã¹ È­¸é¿¡¼­ ¸Ş´º ¼±ÅÃÇÏ´Â ÇÔ¼ö
 void dataShow();													 //µ¥ÀÌÅÍ º¸¿©ÁÖ´Â ÇÔ¼ö
 void dataAnis();													 //µ¥ÀÌÅÍ ºĞ¼®ÇÏ´Â ÆäÀÌÁö
@@ -23,7 +24,6 @@ void graphcar(double y[60]);										 //ÀÚµ¿Â÷ ±×·¡ÇÁ ±×¸®´Â ÇÔ¼ö(°ªÀÌ Ä¿ ºĞ¸®Ç
 void menu(int cur);													 //¸ŞÀÎ ¸Ş´º
 void mainmenu();													 //Á¦¸ñ Ãâ·ÂÇÏ´Â ÇÔ¼ö(¸¹ÀÌ »ç¿ëÇØ ºĞ¸®ÇÔ)
 void home();														 //È¨À¸·Î µ¹¾Æ°¡´Â ÇÔ¼ö
-
 int year[60];											//¿¬µµ ¹è¿­
 double gasoline[60], diesel[60], kerosene[60], car[60]; //°¢°¢ÀÇ µ¥ÀÌÅÍ¿¡ ´ëÇÑ ¹è¿­
 char strBuffer[260]={0, }, *pstrBuffer = NULL, msg[300];//ÇöÀç µğ·ºÅÍ¸® ÀúÀåÇÏ´Â ¹è¿­
