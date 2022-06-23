@@ -1,5 +1,5 @@
 /*#################################################################################################################################
-#v8.5-beta2(Unused variable delected)                                                                                             #
+#v8.6(Final test and edit completed)                                                                                              #
 #제목: 전국 유가와 자동차 등록 대수 추세 분석 프로그램                                                                            #
 #작성자: 2318 주도현                                                                                                              #
 #유가 정보 출처: 한국석유공사 오피넷(https://www.opinet.co.kr/user/opdown/opDownload.do)                                          #
@@ -312,9 +312,9 @@ void specialmainmenu(){//특별한 메인메뉴
 	else mainmenu();
 }
 
-void gtx(int x, int y){
-	COORD pos={x,y};	
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
+void gtx(int x, int y) {
+	COORD pos={x,y};
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
 void cursor(int x, int y){
