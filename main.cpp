@@ -1,5 +1,5 @@
 /*#################################################################################################################################
-#v8.4-rc1(Colorful menu, Add graph title, Some bug edited)     														  		  	  #
+#v8.5-beta1(Shorten code, Flicker-Free)     														  		 				 	  #
 #제목: 전국 유가와 자동차 등록 대수 추세 분석 프로그램 														  					  #
 #작성자: 2318 주도현                                   														  					  #
 #유가 정보 출처: 한국석유공사 오피넷(https://www.opinet.co.kr/user/opdown/opDownload.do)                      					  #
@@ -17,15 +17,15 @@
 void setup();                              					         //첫 화면에서 메뉴 선택하는 함수
 void dataShow();													 //데이터 보여주는 함수
 void dataAnis();													 //데이터 분석하는 페이지
-void dataAnisMenu(int cur);											 //데이터 분석하는 함수의 메뉴
 void dataAnisMain(int N, double y[]);                                //데이터 분석하는 함수
 void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]);//가우스 소거법
-void graph(double y[60]);											 //그래프 그리는 함수
-void graphcar(double y[60]);										 //자동차 그래프 그리는 함수(값이 커 분리함)
-void menu(int cur);													 //메인 메뉴
+void graph(double y[60], int divider);								 //그래프 그리는 함수
 void mainmenu();													 //제목 출력하는 함수(많이 사용해 분리함)
 void home();														 //홈으로 돌아가는 함수
 void specialmainmenu();                                              //특별한 제목
+void gtx(int x, int y);												 //gotoxy 함수 
+void cursor(int x, int y);											 //커서 위치의 색 반전 함수 
+void normalMenu();													 //메뉴 이름 출력 함수 
 
 int year[60];											//연도 배열
 double gasoline[60], diesel[60], kerosene[60], car[60]; //각각의 데이터에 대한 배열
@@ -90,59 +90,21 @@ void setup(){
 			key = _getch();//한번 더 입력 받음(위 화살표의 값은 224 72, 아래 화살표의 값은 224 80)
 			switch (key){
 				case 72://위 화살표 
-					if (cur>1 && cur<=4) {cur--; menu(cur);}//커서를 위로
+					if (cur>1 && cur<=4) cur--;//커서를 위로
 					break;
 				case 80://아래 화살표
-					if (cur>=0 && cur<3) {cur++; menu(cur);}//커서를 아래로
+					if (cur>=0 && cur<3) cur++;//커서를 아래로
 					break;
-				}//반응 속도와 화면 깜빡임 방지 위해 case 마다 menu 함수를 넣음. 
+				}
 		}
-	}
-}
-
-void menu(int cur){//메뉴의 번호에 커서 표현하는 함수
-	switch (cur){//각각의 케이스에 대해 색을 바꿈
-		case 1:
-			mainmenu();//제목 적는 함수
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-			printf("[1]");
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-			printf(" 데이터 보기\n");
-			printf("[2] 데이터 분석\n");
-			printf("[3] 나가기\n\n\n\n\n");
-			break;
-		case 2:
-			mainmenu();//제목 적는 함수
-			printf("[1] 데이터 보기\n");
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-			printf("[2]");
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-			printf(" 데이터 분석\n");
-			printf("[3] 나가기\n\n\n\n\n");
-			break;
-		case 3:
-			mainmenu();//제목 적는 함수
-			printf("[1] 데이터 보기\n");
-			printf("[2] 데이터 분석\n");
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-			printf("[3]");
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-			printf(" 나가기\n\n\n\n\n");
-			break;
-		
+		cursor(cur, 3);
+		gtx(0, 9);
 	}
 }
 
 void dataShow(){//데이터 보여주는 함수
 	mainmenu();//제목 적는 함수
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-	printf("[1]");
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-	printf(" 가솔린 데이터\n");
-	printf("[2] 디젤 데이터\n");
-	printf("[3] 케로신 데이터\n");
-	printf("[4] 자동차 데이터\n");
-	printf("[5] 뒤로 가기\n\n\n\n\n");
+	normalMenu();
 	int cur=1;//현재 흰 커서가 있는 위치
 	while(1){
 		int key = _getch();//키 입력
@@ -150,36 +112,36 @@ void dataShow(){//데이터 보여주는 함수
 			key = _getch();//한번 더 입력 받음(위 화살표의 값은 224 72, 아래 화살표의 값은 224 80)
 			switch (key){
 				case 72://위 화살표 
-					if (cur>1 && cur<=6) {cur--; dataAnisMenu(cur);}//커서를 위로
+					if (cur>1 && cur<=6) cur--;//커서를 위로
 					break;
 				case 80://아래 화살표
-					if (cur>=0 && cur<5) {cur++; dataAnisMenu(cur);}//커서를 아래로
+					if (cur>=0 && cur<5) cur++;//커서를 아래로
 					break;
-				}//반응 속도와 화면 깜빡임 방지 위해 case 마다 dataAnisMenu 함수를 넣음.
+				}
 		}
 		else if (key == 13){//엔터
 			switch (cur){
 				case 1:
 					strcpy(name, "Gasoline");
-					graph(gasoline);//gasoline에 대한 그래프 출력
+					graph(gasoline, 2);//gasoline에 대한 그래프 출력
 					home();//홈으로 돌아가는 함수
 					return;
 					break;
 				case 2:
 					strcpy(name, "Diesel");
-					graph(diesel);//diesel에 대한 그래프 출력
+					graph(diesel, 2);//diesel에 대한 그래프 출력
 					home();//홈으로 돌아가는 함수
 					return;
 					break;
 				case 3:
 					strcpy(name, "Kerosene");
-					graph(kerosene);//kerosene에 대한 그래프 출력
+					graph(kerosene, 2);//kerosene에 대한 그래프 출력
 					home();//홈으로 돌아가는 함수
 					return;
 					break;
 				case 4:
 					strcpy(name, "Car");
-					graphcar(car);//car에 대한 그래프 출력
+					graph(car, 25000);//car에 대한 그래프 출력
 					home();//홈으로 돌아가는 함수
 					return;
 					break;
@@ -189,19 +151,13 @@ void dataShow(){//데이터 보여주는 함수
 					break;
 			}
 		}
+		cursor(cur, 5);
 	}	
 }
 
 void dataAnis(){//데이터 분석 함수
 	mainmenu();//제목 적는 함수
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-	printf("[1]");
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-	printf(" 가솔린 데이터\n");
-	printf("[2] 디젤 데이터\n");
-	printf("[3] 케로신 데이터\n");
-	printf("[4] 자동차 데이터\n");
-	printf("[5] 뒤로 가기\n\n\n\n\n");
+	normalMenu();
 	int cur=1;//현재 흰 커서가 있는 위치
 	int N=51;//데이터 개수
 	double y[N]; //y축 데이터 갖는 함수
@@ -211,12 +167,12 @@ void dataAnis(){//데이터 분석 함수
 			key = _getch();//한번 더 입력 받음(위 화살표의 값은 224 72, 아래 화살표의 값은 224 80)
 			switch (key){
 				case 72://위 화살표 
-					if (cur>1 && cur<=6) {cur--; dataAnisMenu(cur);}//커서를 위로
+					if (cur>1 && cur<=6) cur--;//커서를 위로
 					break;
 				case 80://아래 화살표
-					if (cur>=0 && cur<5) {cur++; dataAnisMenu(cur);}//커서를 아래로
+					if (cur>=0 && cur<5) cur++;//커서를 아래로
 					break;
-				}//반응 속도와 화면 깜빡임 방지 위해 case 마다 dataAnisMenu 함수를 넣음.
+				}
 		}
 		else if (key == 13){//엔터
 			switch (cur){
@@ -250,6 +206,7 @@ void dataAnis(){//데이터 분석 함수
 					break;
 			}
 		}
+		cursor(cur, 5);
 	}
 }
 
@@ -287,66 +244,6 @@ void dataAnisMain(int N, double y[1<<10]){//데이터를 분석하는 함수
 	printf("%e\n",A[0]);
 }
 
-void dataAnisMenu(int cur){//데이터 메뉴 선택 함수
-	switch (cur){
-			case 1:
-				mainmenu();//제목 적는 함수
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-				printf("[1]");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-				printf(" 가솔린 데이터\n");
-				printf("[2] 디젤 데이터\n");
-				printf("[3] 케로신 데이터\n");
-				printf("[4] 자동차 데이터\n");
-				printf("[5] 뒤로 가기\n\n\n\n\n");
-				break;
-			case 2:
-				mainmenu();//제목 적는 함수
-				printf("[1] 가솔린 데이터\n");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-				printf("[2]");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-				printf(" 디젤 데이터\n");
-				printf("[3] 케로신 데이터\n");
-				printf("[4] 자동차 데이터\n");
-				printf("[5] 뒤로 가기\n\n\n\n\n");
-				break;
-			case 3:
-				mainmenu();//제목 적는 함수
-				printf("[1] 가솔린 데이터\n");
-				printf("[2] 디젤 데이터\n");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-				printf("[3]");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-				printf(" 케로신 데이터\n");
-				printf("[4] 자동차 데이터\n");
-				printf("[5] 뒤로 가기\n\n\n\n\n");
-				break;
-			case 4:
-				mainmenu();//제목 적는 함수
-				printf("[1] 가솔린 데이터\n");
-				printf("[2] 디젤 데이터\n");
-				printf("[3] 케로신 데이터\n");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
-				printf("[4]");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-				printf(" 자동차 데이터\n");
-				printf("[5] 뒤로 가기\n\n\n\n\n");
-				break;
-			case 5:
-				mainmenu();//제목 적는 함수
-				printf("[1] 가솔린 데이터\n");
-				printf("[2] 디젤 데이터\n");
-				printf("[3] 케로신 데이터\n");
-				printf("[4] 자동차 데이터\n");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-				printf("[5]");
-				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
-				printf(" 뒤로 가기\n\n\n\n\n");
-				break;
-	}
-}
-
 void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]){//가우스 소거법
     int i,j,k;
     for(i=0;i<m-1;i++){
@@ -373,25 +270,14 @@ void gaussEliminationLS(int m, int n, double a[][1<<10], double x[]){//가우스 소
              
 }
 
-void graph(double y[60]){//그래프 그리는 함수
+void graph(double y[60], int divider){//그래프 그리는 함수
 	initwindow(640, 1000);//창 크기 설정
-	line(0, 1000, 12, 1000-(int)y[1]/2);//첫번째 선 긋기
-	for (int i=1;i<50;i++) line(i*12, 1000-(int)y[i]/2, (i+1)*12, 1000-(int)y[i+1]/2);//모든 선 긋기
+	line(0, 1000, 12, 1000-(int)y[1]/divider);//첫번째 선 긋기
+	for (int i=1;i<50;i++) line(i*12, 1000-(int)y[i]/divider, (i+1)*12, 1000-(int)y[i+1]/divider);//모든 선 긋기
 	settextstyle(9,0,5);
 	outtextxy(0, 0, name);//왼쪽 상단 제목 출력 
 	for (int i=0; i<100; i++) name[i]=0;//배열 초기화
     sprintf(msg, "%s\\main.exe", pstrBuffer);//msg에 현재 프로그램 위치 저장
-	system(msg);//현재 프로그램 다시 실행(그래프 출력시 exit됨)
-}
-
-void graphcar(double y[60]){//자동차그래프 그리는 함수
-	initwindow(640, 1000);//창 크기 설정
-	line(0, 1000, 12, 1000-(int)y[1]/25000);//첫번째 선 긋기
-	for (int i=1;i<50;i++) line(i*12, 1000-(int)y[i]/25000, (i+1)*12, 1000-(int)y[i+1]/25000);//모든 선 긋기
-	settextstyle(9,0,5);
-	outtextxy(0, 0, name);//왼쪽 상단 제목 출력 
-	for (int i=0; i<100; i++) name[i]=0;//배열 초기화 
-	sprintf(msg, "%s\\main.exe", pstrBuffer);//msg에 현재 프로그램 위치 저장
 	system(msg);//현재 프로그램 다시 실행(그래프 출력시 exit됨)
 }
 
@@ -424,4 +310,35 @@ void specialmainmenu(){//특별한 메인메뉴
 		boool=1;
 	}
 	else mainmenu();
+}
+
+void gtx(int x, int y){
+	COORD pos={x,y};	
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos); 
+}
+
+void cursor(int x, int y){
+	gtx(0, x+5);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
+	printf("[%d]", x);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
+	if (x!=1){
+		gtx(0, x+4);
+		printf("[%d]", x-1);
+	}
+	if (x!=y){
+		gtx(0, x+6);
+		printf("[%d]", x+1);
+	}
+}
+
+void normalMenu(){
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);//색상 반전!(Bin 1111 0000 이므로 배경색이 흰색, 글자색이 검정색)
+	printf("[1]");
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);//색상 반전!(Bin 0000 1111 이므로 배경색이 검정색, 글자색이 흰색)
+	printf(" 가솔린 데이터\n");
+	printf("[2] 디젤 데이터\n");
+	printf("[3] 케로신 데이터\n");
+	printf("[4] 자동차 데이터\n");
+	printf("[5] 뒤로 가기\n\n\n\n\n");
 }
