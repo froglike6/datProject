@@ -1,11 +1,12 @@
 /*#################################################################################################################################
-#v8.5-beta1(Shorten code, Flicker-Free)     														  		 				 	  #
-#제목: 전국 유가와 자동차 등록 대수 추세 분석 프로그램 														  					  #
-#작성자: 2318 주도현                                   														  					  #
-#유가 정보 출처: 한국석유공사 오피넷(https://www.opinet.co.kr/user/opdown/opDownload.do)                      					  #
-#자동차 등록 대수 출처: 통계청 e-나라지표(https://www.index.go.kr/potal/main/EachDtlPageDetail.do?idx_cd=1257)					  #
-#32비트 환경에서 컴파일 후 exe 파일 실행																						  #
+#v8.5-beta2(Unused variable delected)                                                                                             #
+#제목: 전국 유가와 자동차 등록 대수 추세 분석 프로그램                                                                            #
+#작성자: 2318 주도현                                                                                                              #
+#유가 정보 출처: 한국석유공사 오피넷(https://www.opinet.co.kr/user/opdown/opDownload.do)                                          #
+#자동차 등록 대수 출처: 통계청 e-나라지표(https://www.index.go.kr/potal/main/EachDtlPageDetail.do?idx_cd=1257)                    #
+#32비트 환경에서 컴파일 후 exe 파일 실행                                                                                          #
 #같이 있는 헤더 파일과 정적 라이브러리 파일 include후 컴파일러에 -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32 추가 후 컴파일#
+#https://github.com/froglike6/datProject                                                                                          #
 #################################################################################################################################*/
 
 #include <stdio.h>
@@ -27,15 +28,15 @@ void gtx(int x, int y);												 //gotoxy 함수
 void cursor(int x, int y);											 //커서 위치의 색 반전 함수 
 void normalMenu();													 //메뉴 이름 출력 함수 
 
-int year[60];											//연도 배열
-double gasoline[60], diesel[60], kerosene[60], car[60]; //각각의 데이터에 대한 배열
+int year[60];											                             //연도 배열
+double gasoline[60], diesel[60], kerosene[60], car[60];                              //각각의 데이터에 대한 배열
 char strBuffer[260]={0, }, *pstrBuffer = NULL, msg[300], name[100], date[100], boool;//현재 디렉터리, 변수 이름, 메인 화면 실행 여부 저장하는 배열
 
 int main(){
-	int temp=0, i;
 	FILE *data = NULL;
 	data = fopen("data/oildata2.csv", "r");//데이터 불러오기
 	if (data !=NULL){
+		int temp=0;
 		fscanf(data, "%*[^\n]\n");//첫번째 행을 먼저 불러와서 두번째 행부터 인식하도록 함.
 		while (!feof(data)){	  //파일의 끝에 도달할 때까지
 			fscanf(data, "%d,%lf,%lf,%lf,%lf\n", &year[temp], &gasoline[temp], &diesel[temp], &kerosene[temp], &car[temp]);//각각의 값을 배열에 넣는다
@@ -210,7 +211,7 @@ void dataAnis(){//데이터 분석 함수
 	}
 }
 
-void dataAnisMain(int N, double y[1<<10]){//데이터를 분석하는 함수
+void dataAnisMain(int N, double y[]){//데이터를 분석하는 함수
 	int n=0;//차수
 	mainmenu();//제목 적는 함수
 	printf("회귀할 데이터의 차수를 입력(0<n<11): ");//n차항 식으로 회귀할때, n을 받음
@@ -220,23 +221,22 @@ void dataAnisMain(int N, double y[1<<10]){//데이터를 분석하는 함수
 		fflush(stdin);//버퍼 비우기
 		scanf("%d", &n);
 	}
-	int i, j;
 	int x[60];//연도 배열
 	for (int i=0; i<51; i++) x[i] = year[i];
-	double X[2*n+1], Y[n+1], B[n+1][1<<10], A[n+1];
-    for(i=0;i<=2*n;i++){
+	double X[2*n+1]={0, }, Y[n+1], B[n+1][1<<10], A[n+1];
+    for(int i=0;i<=2*n;i++){
         X[i]=0;
-        for(j=0;j<N;j++)X[i]=X[i]+pow(x[j],i);
+        for(int j=0;j<N;j++)X[i]=X[i]+pow(x[j],i);
     }     
-    for(i=0;i<=n;i++){
+    for(int i=0;i<=n;i++){
         Y[i]=0;
-        for(j=0;j<N;j++)Y[i]=Y[i]+pow(x[j],i)*y[j];
+        for(int j=0;j<N;j++)Y[i]=Y[i]+pow(x[j],i)*y[j];
     }
-    for(i=0;i<=n;i++){for(j=0;j<=n;j++)B[i][j]=X[i+j];}
-    for(i=0;i<=n;i++) B[i][n+1]=Y[i];
+    for(int i=0;i<=n;i++){for(int j=0;j<=n;j++)B[i][j]=X[i+j];}
+    for(int i=0;i<=n;i++) B[i][n+1]=Y[i];
     gaussEliminationLS(n+1,n+2,B,A);//가우스 소거법
     printf("%ex^%d",A[n],n);//회귀식 출력
-    for(i=n-1;i>0;i--){
+    for(int i=n-1;i>0;i--){
     	if (A[i]>0) printf("+");
         printf("%ex^%d",A[i],i);
 	}
